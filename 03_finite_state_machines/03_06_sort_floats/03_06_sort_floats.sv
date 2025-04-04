@@ -73,6 +73,69 @@ module sort_three_floats (
     output logic [0:2][FLEN - 1:0] sorted,
     output                         err
 );
+    logic u0_less_or_equal_u1;
+    logic u1_less_or_equal_u2;
+    logic u0_less_or_equal_u2;
+    logic err0;
+    logic err1;
+    logic err2;
+    f_less_or_equal i12_floe
+    (
+        .a   ( unsorted[0]         ),
+        .b   ( unsorted[1]         ),
+        .res ( u0_less_or_equal_u1 ),
+        .err ( err0                )
+    );
+
+    f_less_or_equal i23_floe
+    (
+        .a   ( unsorted[1]         ),
+        .b   ( unsorted[2]         ),
+        .res ( u1_less_or_equal_u2 ),
+        .err ( err1                )
+    );
+    
+    f_less_or_equal i13_floe
+    (
+        .a   ( unsorted[0]         ),
+        .b   ( unsorted[2]         ),
+        .res ( u0_less_or_equal_u2 ),
+        .err ( err2                )
+    );
+    assign err = (err0 || err1 || err2);
+
+    always_comb begin 
+        if(u0_less_or_equal_u1)begin 
+            
+            if (u1_less_or_equal_u2) begin 
+                sorted = unsorted;
+            end
+
+            else if (u0_less_or_equal_u2) begin 
+                {  sorted[0],   sorted[1],   sorted[2]} = 
+                {unsorted[0], unsorted[2], unsorted[1]};
+            end
+
+            else
+                {  sorted[0],   sorted[1],   sorted[2]} = 
+                {unsorted[2], unsorted[0], unsorted[1]};
+        end
+        else begin 
+            if (u1_less_or_equal_u2 && u0_less_or_equal_u2) begin 
+                {  sorted[0],   sorted[1],   sorted[2]} = 
+                {unsorted[1], unsorted[0], unsorted[2]};
+            end
+            else if (u1_less_or_equal_u2 && !u0_less_or_equal_u2) begin 
+                {  sorted[0],   sorted[1],   sorted[2]} = 
+                {unsorted[1], unsorted[2], unsorted[0]};
+            end
+            else if (!u1_less_or_equal_u2 && !u0_less_or_equal_u2) begin 
+                {  sorted[0],   sorted[1],   sorted[2]} =
+                {unsorted[2], unsorted[1], unsorted[0]};
+            end
+        end
+
+    end
 
     // Task:
     // Implement a module that accepts three Floating-Point numbers and outputs them in the increasing order.

@@ -179,7 +179,7 @@ module testbench;
             $realtobits ( 9.0 )
         );
 
-        `ifdef ALL_COMBINATIONS
+        `ifdef ALL_COMBINATINS
 
         // Direct testing - a group of tests
 
