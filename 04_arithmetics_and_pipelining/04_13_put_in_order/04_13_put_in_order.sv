@@ -11,8 +11,8 @@ module put_in_order
     input  [ n_inputs - 1 : 0 ]
            [ width    - 1 : 0 ] up_data,
 
-    output                      down_vld,
-    output [ width   - 1 : 0 ]  down_data
+    output logic                      down_vld,
+    output logic [ width   - 1 : 0 ]  down_data
 );
 
     // Task:
@@ -30,5 +30,39 @@ module put_in_order
     // The idea of the block is kinda similar to the "parallel_to_serial" block
     // from Homework 2, but here block should also preserve the output order.
 
+logic [ n_inputs - 1: 0 ]
+      [ width   - 1 : 0 ] queue_data ;
+
+logic [ n_inputs - 1 : 0 ] queue_vld;
+
+logic [$clog2(n_inputs) + 1 : 0] next_awaiting_index;
+
+always_ff @(posedge clk)begin
+    if(| up_vlds)begin
+        for (int i = 0; i < n_inputs; i ++)begin
+            if(up_vlds[i]) begin
+                queue_data[i] <= up_data[i];
+                queue_vld[i] <= up_vlds[i];
+            end
+        end
+    end
+end
+
+always_ff @(posedge clk)begin
+        if(queue_vld[next_awaiting_index])begin
+            queue_vld[next_awaiting_index] <= '0;
+            down_data <= queue_data[next_awaiting_index];
+            down_vld <= queue_vld[next_awaiting_index];
+            next_awaiting_index <= (next_awaiting_index + 1) % n_inputs;
+        end
+        else
+            down_vld <= 0;
+end
+
+always_ff @(posedge clk)begin
+    if(rst)begin
+        next_awaiting_index <= 0;
+    end
+end
 
 endmodule

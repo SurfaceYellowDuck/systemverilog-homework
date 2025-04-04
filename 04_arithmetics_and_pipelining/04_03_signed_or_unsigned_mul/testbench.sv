@@ -62,6 +62,7 @@ module testbench;
 
   initial
     begin
+      // $dumpvars;
       for (int i = 0; i <= umax; i ++)
       for (int j = 0; j <= umax; j ++)
         test (n' (i), n' (j), 1'b0);

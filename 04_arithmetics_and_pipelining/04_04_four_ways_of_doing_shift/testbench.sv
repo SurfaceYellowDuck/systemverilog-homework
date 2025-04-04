@@ -23,6 +23,7 @@ module testbench;
 
   initial
   begin
+    // $dumpvars; 
     repeat (20)
     begin
       a = N' ($urandom());

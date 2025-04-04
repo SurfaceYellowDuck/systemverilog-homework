@@ -12,9 +12,63 @@ module formula_1_pipe
     input  [31:0] b,
     input  [31:0] c,
 
-    output        res_vld,
-    output [31:0] res
+    output logic        res_vld,
+    output logic [31:0] res
 );
+logic [15:0] a_out;
+logic a_out_vld;
+
+logic [15:0] b_out;
+logic b_out_vld;
+
+logic [15:0] c_out;
+logic c_out_vld;
+
+// logic sqrt_rdy;
+// logic [31:0] res_sum;
+
+isqrt isqrt1 (
+    .clk (clk),
+    .rst (rst),
+    .x_vld (arg_vld),
+    .x (a),
+    .y_vld (a_out_vld),
+    .y (a_out)
+);
+
+isqrt isqrt2 (
+    .clk (clk),
+    .rst (rst),
+    .x_vld (arg_vld),
+    .x (b),
+    .y_vld (b_out_vld),
+    .y (b_out)
+);
+
+isqrt isqrt3 (
+    .clk (clk),
+    .rst (rst),
+    .x_vld (arg_vld),
+    .x (c),
+    .y_vld (c_out_vld),
+    .y (c_out)
+);
+
+always_ff @( posedge clk ) begin
+    if (rst) begin
+        res_vld <= 1'b0;
+    end
+    else begin
+        res_vld <= a_out_vld & b_out_vld & c_out_vld;
+    end
+end
+
+always_ff @( posedge clk ) begin
+    res <= a_out + b_out + c_out;
+end
+
+// assign res = res_sum;
+// assign res_vld = sqrt_rdy;
 
     // Task:
     //

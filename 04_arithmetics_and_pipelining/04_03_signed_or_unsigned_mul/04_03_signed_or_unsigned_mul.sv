@@ -53,4 +53,17 @@ module signed_or_unsigned_mul
   output [2 * n - 1:0] res
 );
 
+  logic sign_a, sign_b;
+  logic [n-1:0] abs_a, abs_b;
+  logic [n*2-1:0] unsigned_product;
+
+  assign sign_a = a[n-1];
+  assign sign_b = b[n-1];
+
+  assign abs_a = signed_mul ? (sign_a ? ~a + 'd1 : a) : a;
+  assign abs_b = signed_mul ? (sign_b ? ~b + 'd1 : b) : b;
+
+  assign unsigned_product =  abs_a * abs_b;
+
+  assign res = signed_mul ? ((sign_a ^ sign_b) ? ~unsigned_product + 'd1 : unsigned_product): unsigned_product;
 endmodule

@@ -68,6 +68,31 @@ module shift_register_with_valid
     output [width - 1:0] out_data
 );
 
+logic [width - 1:0] data [0:depth - 1];
+logic [depth - 1 : 0] out_vld_inner;
+
+always_ff @(posedge clk) begin
+    if(in_vld)begin
+        data[0] <= in_data;
+    end
+        for (int i = 1; i < depth; i ++)
+            if(out_vld_inner[i - 1])begin
+                data[i] <= data[i - 1];
+            end
+end
+
+assign out_data = data[depth - 1];
+
+always_ff @(posedge clk)begin
+    if (rst)begin
+        out_vld_inner <= '0;
+    end
+    else begin
+        out_vld_inner <= { out_vld_inner [depth - 2:0], in_vld };
+    end
+end
+assign out_vld = out_vld_inner[depth - 1];
+
     // Task:
     //
     // Implement a variant of a shift register module

@@ -23,6 +23,9 @@ module signed_add_with_overflow
   output       overflow
 );
 
+assign sum = a + b;
+assign overflow = (~sum[3] &a [3] &b [3]) | (sum[3] & (~a[3]) & (~b[3]));
+
   // Task:
   //
   // Implement a module that adds two signed numbers
