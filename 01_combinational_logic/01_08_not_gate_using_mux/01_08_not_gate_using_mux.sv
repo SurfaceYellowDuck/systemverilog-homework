@@ -23,6 +23,18 @@ module not_gate_using_mux
     output o
 );
 
+wire y_1;
+
+mux mux_1
+(
+    .d0  ( 1   ),
+    .d1  ( 0   ),
+    .sel ( i   ),
+    .y   ( y_1 )
+);
+
+assign o = y_1;
+
   // Task:
   // Implement not gate using instance(s) of mux,
   // constants 0 and 1, and wire connections

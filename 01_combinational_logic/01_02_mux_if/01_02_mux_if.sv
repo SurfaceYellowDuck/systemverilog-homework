@@ -27,6 +27,16 @@ module mux_4_1
   input        [1:0] sel,
   output logic [3:0] y
 );
+  always_comb
+    if (sel == 2'b00)
+      y = d0;
+    else if (sel == 2'b01)
+      y = d1;
+    else if (sel == 2'b10)
+      y = d2;
+    else
+      y = d3;
+    
 
   // Task:
   // Using code for mux_2_1 as an example,

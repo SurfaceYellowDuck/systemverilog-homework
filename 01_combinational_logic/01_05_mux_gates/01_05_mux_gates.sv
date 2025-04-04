@@ -39,10 +39,10 @@ module mux_4_1_width_1
   output       y
 );
 
-  wire sel0 = ~ sel [0] & ~ sel [1];
-  wire sel1 =   sel [0] & ~ sel [1];
-  wire sel2 = ~ sel [0] &   sel [1];
-  wire sel3 =   sel [0] &   sel [1];
+  wire sel0 = ~ sel [0] & ~ sel [1];  // при 00 - 1; 01 - 0; 10 - 0; 11 - 0;
+  wire sel1 =   sel [0] & ~ sel [1];  // при 00 - 0; 01 - 0; 10 - 1; 11 - 0;
+  wire sel2 = ~ sel [0] &   sel [1];  // при 00 - 0; 01 - 1; 10 - 0; 11 - 0;
+  wire sel3 =   sel [0] &   sel [1];  // при 00 - 0; 01 - 0; 10 - 0; 11 - 1;
 
   assign y =   (d0 & sel0)
              | (d1 & sel1)
@@ -61,6 +61,13 @@ module mux_4_1
   input  [1:0] sel,
   output [3:0] y
 );
+
+  wire sel0 = ~ sel [0] & ~ sel [1];  // при 00 - 1; 01 - 0; 10 - 0; 11 - 0;
+  wire sel1 =   sel [0] & ~ sel [1];  // при 00 - 0; 01 - 0; 10 - 1; 11 - 0;
+  wire sel2 = ~ sel [0] &   sel [1];  // при 00 - 0; 01 - 1; 10 - 0; 11 - 0;
+  wire sel3 =   sel [0] &   sel [1];  // при 00 - 0; 01 - 0; 10 - 0; 11 - 1;
+
+  assign y = (d0 & { 4 { sel0 } } | d1 & { 4 { sel1 } } | d2 & { 4 { sel2 } } | d3 & { 4 { sel3 } });
 
   // Task:
   // Using code for mux_2_1_width_1, mux_2_1_width_2,
