@@ -1,4 +1,4 @@
-`include "util.svh"
+`include "../include/util.svh"
 
 module testbench;
 
@@ -86,10 +86,10 @@ module testbench;
         begin
             $display("FAIL %s", `__FILE__);
             $display("++ INPUT    => {%s}",
-                             `PD(n_orig_tokens));
+                             `PB(n_orig_tokens));
 
-            $display("++ TEST     => {%s}",
-                             `PD(n_double_tokens));
+            $display("++ TEST     => {%s, %s}",
+                             `PB(n_orig_tokens), `PB(n_double_tokens));
             $finish(1);
         end
 
@@ -101,7 +101,7 @@ module testbench;
             @ (posedge clk);
         end
 
-        if (double_overflow !== 1'b1)
+        if (double_overflow != 1'b1)
         begin
             $display("FAIL %s", `__FILE__);
             $display("++ INPUT    => {%s} for 1000 cycles",`PD(a));

@@ -12,6 +12,18 @@ module serial_adder_with_vld
   input  last,
   output sum
 );
+logic carry;
+logic carry_d;
+assign sum = vld ? (a ^ b ^ carry ): 0;
+assign carry_d = vld ? (vld & last ? 0 : (a & b) | (carry & (a ^ b))) : carry;
+always_ff @ (posedge clk)begin 
+  if(rst)begin
+    carry <= 0;
+  end
+  else
+    carry <= carry_d;
+  end
+
 
   // Task:
   // Implement a module that performs serial addition of two numbers

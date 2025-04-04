@@ -9,6 +9,17 @@ module halve_tokens
     input  a,
     output b
 );
+logic two_units;
+always_ff @(posedge clk)
+    if(rst)begin
+        two_units <= 0;
+    end
+    else if(a)begin 
+        two_units <= ~ two_units; 
+    end
+assign b = a & two_units;
+
+
     // Task:
     // Implement a serial module that reduces amount of incoming '1' tokens by half.
     //

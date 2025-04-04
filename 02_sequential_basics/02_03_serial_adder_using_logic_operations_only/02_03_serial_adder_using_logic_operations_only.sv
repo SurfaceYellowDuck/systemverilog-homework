@@ -39,7 +39,16 @@ module serial_adder_using_logic_operations_only
   input  b,
   output sum
 );
-
+logic carry;
+wire carry_d;
+assign sum = a ^ b ^ carry;
+assign carry_d = (a & b) | (carry & (a ^ b));
+always_ff @ (posedge clk)begin 
+  if(rst)
+    carry <= 0;
+  else
+    carry <= carry_d;
+  end
   // Task:
   // Implement a serial adder using only ^ (XOR), | (OR), & (AND), ~ (NOT) bitwise operations.
   //
