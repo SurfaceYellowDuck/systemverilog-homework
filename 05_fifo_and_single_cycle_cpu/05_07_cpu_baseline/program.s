@@ -10,24 +10,24 @@
 # Stanislav Zhelnio, 2020
 # Amended by Yuri Panchul, 2024
 
-fibonacci:
+# fibonacci:
 
-        mv      a0, zero
-        li      t0, 1
+#         mv      a0, zero
+#         li      t0, 1
 
-loop:   add     t1, a0, t0
-        mv      a0, t0
-        mv      t0, t1
-        beqz    zero, loop
+# loop:   add     t1, a0, t0
+#         mv      a0, t0
+#         mv      t0, t1
+#         beqz    zero, loop
 
 # RISC-V factorial program
 # Uncomment it when necessary
 
-# factorial:
-#
-#         li      a0, 1
-#         li      t0, 2
-#
-# loop:   mul     a0, a0, t0
-#         addi    t0, t0, 1
-#         b       loop
+factorial:
+
+        li      a0, 1
+        li      t0, 2
+
+loop:   mul     a0, a0, t0
+        addi    t0, t0, 1
+        b       loop

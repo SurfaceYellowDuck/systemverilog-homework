@@ -31,6 +31,7 @@ module sr_cpu
     wire        aluSrc;
     wire        wdSrc;
     wire  [2:0] aluControl;
+    wire        jumpL;
 
     // instruction decode wires
 
@@ -43,15 +44,16 @@ module sr_cpu
     wire [31:0] immI;
     wire [31:0] immB;
     wire [31:0] immU;
+    wire [31:0] immJ;
+
 
     // program counter
 
     wire [31:0] pc;
     wire [31:0] pcBranch = pc + immB;
     wire [31:0] pcPlus4  = pc + 32'd4;
-    wire [31:0] pcNext   =
-                            pcSrc ? pcBranch :
-                                    pcPlus4;
+    wire [31:0] pcJ      = pc + immJ;
+    wire [31:0] pcNext   = pcSrc ? jumpL ? pcJ : pcBranch :  pcPlus4;
 
     register_with_rst r_pc (clk, rst, pcNext, pc);
 
@@ -73,7 +75,9 @@ module sr_cpu
         .cmdF7      ( cmdF7       ),
         .immI       ( immI        ),
         .immB       ( immB        ),
-        .immU       ( immU        )
+        .immU       ( immU        ),
+        .immJ       ( immJ        )
+
     );
 
     // register file
@@ -111,9 +115,7 @@ module sr_cpu
         .result     ( aluResult   )
     );
 
-    assign wd3 =
-                wdSrc ? immU    :
-                        aluResult;
+    assign wd3 = wdSrc ? jumpL ? pc + 32'd4 : immU : aluResult;
 
     // control
 
@@ -127,7 +129,8 @@ module sr_cpu
         .regWrite   ( regWrite    ),
         .aluSrc     ( aluSrc      ),
         .wdSrc      ( wdSrc       ),
-        .aluControl ( aluControl  )
+        .aluControl ( aluControl  ),
+        .jumpL
     );
 
     // debug register access
